@@ -2,6 +2,7 @@ package com.javaex.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,7 +18,8 @@ import com.javaex.vo.PersonVo;
 public class PhoneController {
 
 	// fields
-
+	@Autowired
+	private PhoneDao phoneDao;
 	// constructors
 
 	// g/s
@@ -30,11 +32,10 @@ public class PhoneController {
 		System.out.println("[PhoneController.list]");
 		
 		//Dao사용
-		PhoneDao phoneDao = new PhoneDao();
+		//PhoneDao phoneDao = new PhoneDao();
 		
 		//Dao의 메소드로 데이터 가져오기
 		List<PersonVo> personList = phoneDao.getPersonList();
-		System.out.println(personList);
 		
 		//Model에 담기(택배박스에 담기) --> DispatcherServlet에 전달된다. --> request의 attribute 영역에 넣는다.
 		model.addAttribute("personList",personList);
@@ -51,28 +52,7 @@ public class PhoneController {
 		return "/WEB-INF/views/writeForm.jsp"; // --> DispatcherServlet 야 (/WEB-INF/views/writeForm.jsp) 에 포워드 해줘잉
 
 	}
-
-	/*
-	 * // 쓰기
-	 * 
-	 * @RequestMapping(value = "/write", method = { RequestMethod.GET,
-	 * RequestMethod.POST }) public String write(@RequestParam("name") String
-	 * name, @RequestParam("hp") String hp,
-	 * 
-	 * @RequestParam(value = "company", required = false, defaultValue = "-1")
-	 * String company) {
-	 * 
-	 * System.out.println("[PhoneController.write]"); System.out.println(name);
-	 * System.out.println(hp); System.out.println(company);
-	 * 
-	 * PersonVo personVo = new PersonVo(name, hp, company);
-	 * System.out.println(personVo);
-	 * 
-	 * return "";
-	 * 
-	 * }
-	 */
-
+	
 	// @ModelAttribute 일 때 // 쓰기
 	@RequestMapping(value="/write",method={RequestMethod.GET,RequestMethod.POST})
 	public String write(@ModelAttribute PersonVo personVo) {
@@ -83,41 +63,22 @@ public class PhoneController {
 		System.out.println(personVo);
 		
 		//Dao사용
-		PhoneDao phoneDao = new PhoneDao();
+		//PhoneDao phoneDao = new PhoneDao();
 		//Dao의 personInsert() 이용해서 데이터 저장
 		phoneDao.personInsert(personVo);
 		
 		return "redirect:/list";
 
 	}
-	/*
-	 * //파라미터 1개씩 받을 때 // 쓰기
-	 * 
-	 * @RequestMapping(value = "/write", method = { RequestMethod.GET,
-	 * RequestMethod.POST })
-	 * 
-	 * public String write(@RequestParam("name") String name, @RequestParam("hp")
-	 * String hp,
-	 * 
-	 * @RequestParam("company") String company) {
-	 * System.out.println("[PhoneController.write]"); System.out.println(name);
-	 * System.out.println(hp); System.out.println(company);
-	 * 
-	 * PersonVo personVo = new PersonVo(name, hp, company);
-	 * System.out.println(personVo);
-	 * 
-	 * return "";
-	 * 
-	 * }
-	 */
+	
 	//PathVariable 테스트
 	@RequestMapping(value="/board/read/{no}", method = {RequestMethod.GET, RequestMethod.POST})
 	public String read(@PathVariable("no") int boardNo) {
 		System.out.println("PathVariable[read]");
 		
-		//localhost:8088/phonebook3/board/read/1
-		//localhost:8088/phonebook3/board/read/2
-		//localhost:8088/phonebook3/board/read/100 --> 이렇게 표현 가능
+		//localhost:8088/phonebook5/board/read/1
+		//localhost:8088/phonebook5/board/read/2
+		//localhost:8088/phonebook5/board/read/100 --> 이렇게 표현 가능
 		
 		System.out.println(boardNo);
 		
@@ -130,7 +91,7 @@ public class PhoneController {
 		System.out.println("[PhoneController.delete]");
 		
 		PhoneDao phoneDao = new PhoneDao();
-		phoneDao.personDelete(personId);
+		//phoneDao.personDelete(personId);
 		
 		return "redirect:/list";
 	}
@@ -140,9 +101,9 @@ public class PhoneController {
 		System.out.println("[PhoneController.updateForm]");
 		
 		PhoneDao phoneDao = new PhoneDao();
-		PersonVo personVo = phoneDao.getPerson(personId);
+		//PersonVo personVo = phoneDao.getPerson(personId);
 		
-		model.addAttribute("personVo",personVo);
+		//model.addAttribute("personVo",personVo);
 		
 		return "/WEB-INF/views/updateForm.jsp";
 	}
@@ -152,7 +113,7 @@ public class PhoneController {
 		System.out.println("[PhoneController.update]");
 		
 		PhoneDao phoneDao = new PhoneDao();
-		phoneDao.personUpdate(personVo);
+		//phoneDao.personUpdate(personVo);
 		
 		return "redirect:/list";
 		

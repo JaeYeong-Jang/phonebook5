@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<form action="/phonebook3/update" method="get">
+<form action="/phonebook5/update" method="get">
 	이름 : <input type="text" name="name" value="${personVo.name}"> <br>
 	핸드폰 : <input type="text" name="hp" value="${personVo.hp}"> <br>
 	회사번호 : <input type="text" name="company" value="${personVo.company }"> <br>
