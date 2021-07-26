@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,17 +32,13 @@ public class PhoneController {
 	public String list(Model model) {
 		System.out.println("[PhoneController.list]");
 		
-		//Dao사용
-		//PhoneDao phoneDao = new PhoneDao();
-		
 		//Dao의 메소드로 데이터 가져오기
 		List<PersonVo> personList = phoneDao.getPersonList();
 		
 		//Model에 담기(택배박스에 담기) --> DispatcherServlet에 전달된다. --> request의 attribute 영역에 넣는다.
 		model.addAttribute("personList",personList);
 		
-
-		return "/WEB-INF/views/list.jsp"; // --> DispatcherServlet 야 (/WEB-INF/views/list.jsp) 에 포워드 해줘잉
+		return "list"; // --> DispatcherServlet 야 (/WEB-INF/views/list.jsp) 에 포워드 해줘잉
 	}
 
 	// 쓰기폼
@@ -49,7 +46,7 @@ public class PhoneController {
 	public String writeForm() {
 		System.out.println("[PhoneController.writeForm]");
 
-		return "/WEB-INF/views/writeForm.jsp"; // --> DispatcherServlet 야 (/WEB-INF/views/writeForm.jsp) 에 포워드 해줘잉
+		return "writeForm"; // --> DispatcherServlet 야 (/WEB-INF/views/writeForm.jsp) 에 포워드 해줘잉
 
 	}
 	
@@ -62,13 +59,21 @@ public class PhoneController {
 
 		System.out.println(personVo);
 		
-		//Dao사용
-		//PhoneDao phoneDao = new PhoneDao();
 		//Dao의 personInsert() 이용해서 데이터 저장
 		phoneDao.personInsert(personVo);
 		
 		return "redirect:/list";
 
+	}
+	
+	//쓰기2
+	@RequestMapping(value ="/write2", method = {RequestMethod.GET, RequestMethod.POST})
+	public String write (@RequestParam("name")String name, @RequestParam("hp")String hp, @RequestParam("company")String company) {
+		System.out.println("[PhoneController.write2]");
+		
+		phoneDao.personInsert2(name, hp, company);
+		
+		return "redirect:/list";
 	}
 	
 	//PathVariable 테스트
@@ -90,8 +95,7 @@ public class PhoneController {
 	public String delete(@RequestParam("personId")int personId) {
 		System.out.println("[PhoneController.delete]");
 		
-		PhoneDao phoneDao = new PhoneDao();
-		//phoneDao.personDelete(personId);
+		phoneDao.personDelete(personId);
 		
 		return "redirect:/list";
 	}
@@ -100,19 +104,31 @@ public class PhoneController {
 	public String updateForm(Model model,@RequestParam("personId")int personId) {
 		System.out.println("[PhoneController.updateForm]");
 		
-		PhoneDao phoneDao = new PhoneDao();
-		//PersonVo personVo = phoneDao.getPerson(personId);
+		PersonVo personVo = phoneDao.getPerson(personId);
 		
-		//model.addAttribute("personVo",personVo);
+		model.addAttribute("personVo",personVo);
 		
-		return "/WEB-INF/views/updateForm.jsp";
+		return "updateForm";
 	}
+	//수정폼2 Map사용
+	@RequestMapping(value="updateForm2", method = {RequestMethod.GET, RequestMethod.POST})
+	public String updateForm2(Model model, @RequestParam("personId")int personId) {
+		System.out.println("[PhoneController.updateForm2]");
+		
+		System.out.println(personId);
+		
+		Map<String, Object> personMap = phoneDao.getPerson2(personId);
+		
+		model.addAttribute("pMap",personMap);
+		
+		return "updateForm2";
+	}
+	
 	//수정
 	@RequestMapping(value="update", method = {RequestMethod.GET, RequestMethod.POST})
 	public String update(@ModelAttribute PersonVo personVo) {
 		System.out.println("[PhoneController.update]");
 		
-		PhoneDao phoneDao = new PhoneDao();
 		//phoneDao.personUpdate(personVo);
 		
 		return "redirect:/list";
